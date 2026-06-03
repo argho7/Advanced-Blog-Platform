@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% for post in posts%}
+        {{post.user}} <br>
+        {{post.title}} <br>
+        {{post.slug}} <br>
+        {{post.thumbnail}} <br>
+        {{post.content}} <br>
+        {{post.pr | safe }} <br>
+        {{post.mc | safe }} <br>
+        {{post.category}} <br>
+        {{post.tags}} <br>
+        {{post.status}} <br>
+        {{post.visiblity}} <br>
+    {% endfor %}
+</body>
+</html>

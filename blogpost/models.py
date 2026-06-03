@@ -24,13 +24,20 @@ class Post(models.Model):
         ('private', 'Private'),
         ('followers_only', 'Followers_only'),
         ]
-    title = models.CharField(max_length=250)
-    user = models.ManyToManyField(User, blank=True, null=True)
+    user = models.ManyToManyField(User)
+    title = models.CharField(max_length=255, blank=True)
     slug = models.SlugField(blank=True, null=True)
-    Thumbnail = models.ImageField(upload_to='blog/post/thumbnails/', blank=True, null=True)
+    thumbnail = models.ImageField(upload_to='blog/post/thumbnails/', blank=True, null=True)
     content = models.TextField(blank=True, null=True)
+
+    from prose.fields import RichTextField
+    pr=RichTextField(blank=True, null=True)
+
+    from tinymce.models import HTMLField
+    mc=HTMLField(blank=True, null=True)
+
     category = models.ForeignKey(Category, default='uncategorized', on_delete=models.DO_NOTHING)
-    tags = models.ManyToManyField(Tags, blank=True, null=True)
+    tags = models.ManyToManyField(Tags, blank=True)
     status=models.CharField(max_length=9, choices=status_choices, default='draft')
     visiblity = models.CharField(max_length=14, choices=visiblity_choices, default='private')
     def __str__(self):
