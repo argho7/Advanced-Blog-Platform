@@ -217,3 +217,5 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 share.bat
+media/prose/
+media/blog/post/thumbnails/
