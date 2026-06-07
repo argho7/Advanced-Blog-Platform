@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blogpost',
+    'prose',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +126,6 @@ STATICFILES_DIR= [BASE_DIR / 'static/']
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT= BASE_DIR / 'media/'
+
+# File size in megabytes
+PROSE_ATTACHMENT_ALLOWED_FILE_SIZE = 5
