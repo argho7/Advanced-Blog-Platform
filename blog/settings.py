@@ -38,9 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blogpost',
-    'prose',
+
     'user_auth',
+    'blogpost',
+    
+    'prose',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +132,6 @@ MEDIA_ROOT= BASE_DIR / 'media/'
 
 # File size in megabytes
 PROSE_ATTACHMENT_ALLOWED_FILE_SIZE = 5
+
+#Cutom user model
+AUTH_USER_MODEL = 'user_auth.Custom_User'
