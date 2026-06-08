@@ -1,7 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
 from .utils import Generate_Slug
 from prose.models import Document
+from user_auth.models import Custom_User
 
 # Create your models here.
 class Category(models.Model):
@@ -33,11 +33,11 @@ class Post(models.Model):
         ('followers_only', 'Followers_only'),
         ]
     title = models.CharField(max_length=255)
-    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey(Custom_User, null=True, on_delete=models.CASCADE)
     slug = models.SlugField(blank=True, null=True)
     thumbnail = models.ImageField(upload_to='blog/post/thumbnails/', blank=True, null=True)
     content = models.OneToOneField(Document, on_delete=models.CASCADE, blank=True, null=True)
-    category = models.ForeignKey(Category, default='uncategorized', null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(Category, default='uncategorized', null=True, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tags, blank=True)
     status=models.CharField(max_length=9, choices=status_choices, default='draft')
     visibility = models.CharField(max_length=14, choices=visiblity_choices, default='private')
