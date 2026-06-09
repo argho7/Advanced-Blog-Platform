@@ -77,8 +77,9 @@
                             </div>
                         </div>
                     {% else %}
-                        <a href="" class="text-gray-700 hover:text-blue-600">Login</a>
-                        <a href="" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        <a href="{% url 'verify_email' %}" class="text-gray-700 hover:text-blue-600">verify_email</a>
+                        <a href="{% url 'login' %}" class="text-gray-700 hover:text-blue-600">Login</a>
+                        <a href="{% url 'register' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
                             Sign Up
                         </a>
                     {% endif %}

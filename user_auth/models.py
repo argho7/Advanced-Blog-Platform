@@ -15,6 +15,7 @@ class Custom_User(AbstractUser):
     Skills = models.TextField(blank=True, null=True)
     Social_links = models.OneToOneField(Document, on_delete=models.CASCADE, blank=True, null=True)
     is_email_verified = models.BooleanField(default=False)
+    email_otp = models.IntegerField(blank=True, null=True)
     is_banned = models.BooleanField(default=False)
 
     class Meta:
