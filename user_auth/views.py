@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 
 # Create your views here.
@@ -20,3 +20,7 @@ def user_registration(request):
 
 def verify_email(request):
     return render(request, 'verify_email.html')
+
+def user_logout(request):
+    logout(request)
+    return redirect('home')
