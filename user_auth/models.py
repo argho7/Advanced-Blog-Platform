@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from prose.models import Document
-
+from tinymce.models import HTMLField
 # Create your models here.
 class Custom_User(AbstractUser):
     gender_choices=[
@@ -13,7 +12,7 @@ class Custom_User(AbstractUser):
     bio = models.TextField(blank=True, null=True)
     gender = models.CharField(choices=gender_choices, default='u', max_length=1)
     Skills = models.TextField(blank=True, null=True)
-    Social_links = models.OneToOneField(Document, on_delete=models.CASCADE, blank=True, null=True)
+    Social_links = HTMLField(blank=True, null=True)
     is_email_verified = models.BooleanField(default=False)
     email_otp = models.IntegerField(blank=True, null=True)
     is_banned = models.BooleanField(default=False)

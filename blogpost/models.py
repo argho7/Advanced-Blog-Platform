@@ -1,7 +1,7 @@
 from django.db import models
 from .utils import Generate_Slug
-from prose.models import Document
 from user_auth.models import Custom_User
+from tinymce.models import HTMLField
 
 # Create your models here.
 class Category(models.Model):
@@ -36,8 +36,8 @@ class Post(models.Model):
     author = models.ForeignKey(Custom_User, null=True, on_delete=models.CASCADE)
     slug = models.SlugField(blank=True, null=True)
     thumbnail = models.ImageField(upload_to='blog/post/thumbnails/', blank=True, null=True)
-    content = models.OneToOneField(Document, on_delete=models.CASCADE, blank=True, null=True)
-    category = models.ForeignKey(Category, default='uncategorized', null=True, on_delete=models.CASCADE)
+    content= HTMLField(null=True, blank=True)
+    category = models.ForeignKey(Category, null=True, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tags, blank=True)
     status=models.CharField(max_length=9, choices=status_choices, default='draft')
     visibility = models.CharField(max_length=14, choices=visiblity_choices, default='private')

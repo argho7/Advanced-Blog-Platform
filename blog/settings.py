@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'user_auth',
     'blogpost',
     
-    'prose',
+    'tinymce',
 ]
 
 MIDDLEWARE = [
@@ -130,8 +130,6 @@ STATICFILES_DIR= [BASE_DIR / 'static/']
 MEDIA_URL = 'media/'
 MEDIA_ROOT= BASE_DIR / 'media/'
 
-# File size in megabytes
-PROSE_ATTACHMENT_ALLOWED_FILE_SIZE = 5
 
 #Cutom user model
 AUTH_USER_MODEL = 'user_auth.Custom_User'
