@@ -1,0 +1,32 @@
+VERIFY YOUR EMAIL - AdvancedBlogPlatform
+================================
+
+Hello {{ username }}!
+
+Thank you for registering with AdvancedBlogPlatform. Please use the following One-Time Password (OTP) to verify your email address:
+
+🔐 YOUR OTP CODE: {{ otp_code }}
+
+⏰ This OTP is valid for 10 minutes.
+
+⚠️ SECURITY NOTICE:
+- Never share this OTP with anyone
+- Our support team will never ask for your OTP
+- If you didn't request this, please ignore this email
+
+📝 VERIFICATION LINK:
+{{ verification_link }}
+
+Copy and paste the link above into your browser, or enter the OTP code manually on the verification page.
+
+✨ WHAT YOU CAN DO AFTER VERIFICATION:
+- Create and publish your first blog post
+- Follow other writers and build your network
+- Comment and engage with the community
+- Save your favorite articles
+
+Need help? Contact our support team at support@AdvancedBlogPlatform.com
+
+© 2026 AdvancedBlogPlatform. All rights reserved.
+
+This email was sent to {{ email }}. If you didn't create an account with AdvancedBlogPlatform, please ignore this email.
