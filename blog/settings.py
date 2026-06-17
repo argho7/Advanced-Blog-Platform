@@ -126,7 +126,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIR= [BASE_DIR / 'static/']
-
+STATIC_ROOT= BASE_DIR/ 'staticfiles'
 MEDIA_URL = 'media/'
 MEDIA_ROOT= BASE_DIR / 'media/'
 
@@ -141,4 +141,4 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-DEFAULT_FROM_EMAIL = 'AdvancedBlogPlatform <noreply@Advancedblogplatform.com>'
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
