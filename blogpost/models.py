@@ -22,7 +22,7 @@ class Tags(models.Model):
 
 class Post(models.Model):
     status_choices=[
-        ('draft', 'Draft'),
+        ('drafted', 'Drafted'),
         ('published', 'Published'),
         ('scheduled', 'Scheduled'),
         ('archived', 'Archived'),
@@ -41,6 +41,9 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tags, blank=True)
     status=models.CharField(max_length=9, choices=status_choices, default='draft')
     visibility = models.CharField(max_length=14, choices=visiblity_choices, default='private')
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True,  null=True)
+    published_at = models.DateTimeField(blank=True, null=True)
     
     class Meta:
         verbose_name = "Post"
