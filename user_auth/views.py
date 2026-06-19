@@ -31,16 +31,16 @@ def user_registration(request):
         email=request.POST['email']
         password=request.POST['password']
         confirm_password=request.POST['confirm_password']
-
+        context={'username':username, 'email':email}
         if Custom_User.objects.filter(username=username).exists():
-            messages.error(request, 'Username must be unique and can contain letters, numbers, and underscores.')
-            return render(request, 'registration.html')
+            messages.error(request, "This username has already been used. Please choose a different username.")
+            return render(request, 'registration.html', context)
         if Custom_User.objects.filter(email=email).exists():
-            messages.error(request, 'Email must be unique.')
-            return render(request, 'registration.html')
+            messages.error(request, "An account with this email already exists. Please use a different email address.")
+            return render(request, 'registration.html', context)
         if password != confirm_password:
             messages.error(request, 'Passwords do not match. Please enter same password for PASSWORD FIELD AND CONFIRM PASSWORD FIELD')
-            return render(request, 'registration.html')
+            return render(request, 'registration.html', context)
         if not username or not email or not password or not confirm_password:
             messages.error(request, "Username, email and password are required.")
             return render(request, 'registration.html')
@@ -51,28 +51,36 @@ def user_registration(request):
             password=password,
             email_otp=otp
             )
-        send_otp_email(request, email, otp)
-        messages.success(request, 'Account Created! Verify your account.')
+        send_otp_email(request, username, email, otp)
+        messages.success(request, 'Account Created! Check your email account for an email.')
         return redirect('verify_email')
     else:
         return render(request, 'registration.html')
 
-def verify_email(request,email=None,otp=None):
+def verify_email(request):
     if request.method=='POST':
         email=request.POST.get('email')
         otp=request.POST.get('otp')
+        context={'email':email}
+        
         if Custom_User.objects.filter(email=email).exists():
-            print('ok')
             user=Custom_User.objects.get(email=email)
+
+            try:
+                otp=int(otp)
+            except ValueError as e:
+                messages.error(request, "OTP must be numbers!")
+                return render(request, 'verify_email.html', context)
+            
             if user.email_otp==otp:
                 user.is_email_verified=True
-                user.email_otp=''
+                user.email_otp=None
                 user.save()
-                messages.success(request, 'Account verified. ')
+                messages.success(request, "Account verified.")
                 return redirect('login')
             else:
-                messages.error(request, "Something is wrong with the account. Contant with the support team")
-                return redirect('home')
+                messages.error(request, "Wrong OTP !")
+                return render(request, 'verify_email.html', context)
         else:
             messages.error(request, 'User does not exists!')
             return redirect('register')

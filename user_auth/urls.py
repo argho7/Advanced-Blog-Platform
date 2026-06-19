@@ -6,5 +6,4 @@ urlpatterns = [
     path('logout/', user_logout, name='logout'),
     path('register/', user_registration, name='register'),
     path('verify-email/', verify_email, name='verify_email'),
-    path('verify-email/<str:email>/', verify_email, name='verify_email'),
 ]
