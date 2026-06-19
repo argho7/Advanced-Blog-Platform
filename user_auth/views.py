@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
 from django.contrib import messages
 from .models import Custom_User
 from .utils import generate_otp, send_otp_email
@@ -14,9 +13,18 @@ def user_login(request):
         password=request.POST['password']
         user=authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
-            messages.success(request, f'Login Successful! Welcome back {username.upper()}')
-            return redirect('home')
+            if user.is_email_verified==True:
+                login(request, user)
+                messages.success(request, f'Login Successful! Welcome back {username.upper()}')
+                return redirect('home')
+            else:
+                otp=generate_otp()
+                user.email_otp=otp
+                user.save()
+                send_otp_email(request, username, user.email, otp)
+                context={'email':user.email}
+                messages.success(request, "Please verify your email!")
+                return redirect('verify_email')
         else:
             messages.error(request, 'Wrong username or password!')
             return render(request, 'login.html')
@@ -58,6 +66,8 @@ def user_registration(request):
         return render(request, 'registration.html')
 
 def verify_email(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     if request.method=='POST':
         email=request.POST.get('email')
         otp=request.POST.get('otp')
@@ -65,18 +75,21 @@ def verify_email(request):
         
         if Custom_User.objects.filter(email=email).exists():
             user=Custom_User.objects.get(email=email)
+            if user.is_email_verified==True:
+                messages.success(request, "Account is already verified.")
+                return redirect('login')
 
-            try:
-                otp=int(otp)
-            except ValueError as e:
-                messages.error(request, "OTP must be numbers!")
-                return render(request, 'verify_email.html', context)
+            # try:
+            #     otp=int(otp)
+            # except ValueError as e:
+            #     messages.error(request, "OTP must be numbers!")
+            #     return render(request, 'verify_email.html', context)
             
             if user.email_otp==otp:
                 user.is_email_verified=True
                 user.email_otp=None
                 user.save()
-                messages.success(request, "Account verified.")
+                messages.success(request, "Account verified. You can login now")
                 return redirect('login')
             else:
                 messages.error(request, "Wrong OTP !")
