@@ -162,8 +162,13 @@ TINYMCE_DEFAULT_CONFIG = {
         ''',
     'toolbar_mode': 'sliding',
     'contextmenu': 'link image table',
-    'images_upload_url': '/upload-image/',  # For image upload
-    'images_upload_handler': 'handle_image_upload',  # Custom handler
+    # 'images_upload_handler': 'handle_image_upload',  # Custom handler
+    'images_upload_url': '/upload/image/',  
+    'images_upload_credentials': True, 
+    'images_reuse_filename': False,
+    'images_upload_base_path': '/media/blog/post/images/',
+    'automatic_uploads': True,
+    'file_picker_types': 'image',
     'relative_urls': False,
     'remove_script_host': False,
     'convert_urls': True,
