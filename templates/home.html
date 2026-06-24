@@ -76,6 +76,11 @@
                     </a>
                 </h2>
                 
+                <!-- show creation date and time -->
+                <p class="text-gray-600 mb-4 line-clamp-3">
+                    {{ post.created_at }}
+                </p>
+
                 <!-- Content Preview -->
                 <p class="text-gray-600 mb-4 line-clamp-3">
                     {{ post.content|striptags|truncatewords:30 }}
