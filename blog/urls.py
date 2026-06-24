@@ -25,6 +25,7 @@ urlpatterns = [
 
     path('', include("blogpost.urls")),
     path('', include("user_auth.urls")),
+    path('', include("text_editor.urls")),
 ]
 
 

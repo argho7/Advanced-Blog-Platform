@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     
     'user_auth',
     'blogpost',
+    'text_editor',
     
 ]
 
