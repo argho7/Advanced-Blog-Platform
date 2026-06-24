@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% if edit_mode %}Edit Post{% else %}Create New Post{% endif %}{% endblock title %}
+
+{% block extra_css %}
+<style>
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+    .form-input {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        transition: border-color 0.15s ease-in-out;
+    }
+    .form-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        text-decoration: none;
+        border: none;
+    }
+    .btn-blue {
+        background-color: #3b82f6;
+        color: white;
+    }
+    .btn-blue:hover {
+        background-color: #2563eb;
+    }
+    .btn-green {
+        background-color: #22c55e;
+        color: white;
+    }
+    .btn-green:hover {
+        background-color: #16a34a;
+    }
+    .btn-gray {
+        background-color: #e5e7eb;
+        color: #374151;
+    }
+    .btn-gray:hover {
+        background-color: #d1d5db;
+    }
+    .thumbnail-preview {
+        height: 8rem;
+        width: auto;
+        border-radius: 0.5rem;
+        object-fit: cover;
+    }
+    /* TinyMCE Styling */
+    .tox-tinymce {
+        border-radius: 0.5rem !important;
+        border: 1px solid #d1d5db !important;
+    }
+    .tox-tinymce:focus-within {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <h1 class="text-2xl font-bold mb-6">
+            {% if edit_mode %}Edit Post{% else %}Create New Post{% endif %}
+        </h1>
+        <form method="POST" enctype="multipart/form-data" id="postForm">
+            {% csrf_token %}
+            
+            <!-- Title -->
+            <div class="form-group">
+                <label class="form-label">Title *</label>
+                <input type="text" name="title" value="{{ post_title|default:'' }}" required class="form-input">
+            </div>
+            
+            <!-- Thumbnail -->
+            <div class="form-group">
+                <label class="form-label">Thumbnail</label>
+                {% if edit_mode and post.thumbnail %}
+                <div class="mb-2">
+                    <img src="{{ post.thumbnail.url }}" class="thumbnail-preview">
+                    <label class="inline-flex items-center mt-2">
+                        <input type="checkbox" name="remove_thumbnail" class="mr-2"> Remove thumbnail
+                    </label>
+                </div>
+                {% endif %}
+                <input type="file" name="thumbnail" accept="image/*" class="form-input">
+            </div>
+            
+            <!-- Category -->
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="category" required class="form-input" >
+                    <option value="">Select category</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}" {% if post.category.id == category.id %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Tags -->
+            <div class="form-group">
+                <label class="form-label">Tags</label>
+                <select name="tags" multiple class="form-input" style="height: 100px;">
+                    {% for tag in tags %}
+                    <option value="{{ tag.id }}" {% if tag in post.tags.all %}selected{% endif %}>
+                        {{ tag.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <p class="form-hint">Hold Ctrl/Cmd to select multiple tags</p>
+            </div>
+            
+            <!-- Status & Visibility -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-input">
+                        <option value="drafted" {% if post.status == 'drafted' %}selected{% endif %}>Drafted</option>
+                        <option value="published" {% if post.status == 'published' %}selected{% endif %}>Published</option>
+                        <option value="scheduled" {% if post.status == 'scheduled' %}selected{% endif %}>Scheduled</option>
+                        <option value="archived" {% if post.status == 'archived' %}selected{% endif %}>Archived</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Visibility</label>
+                    <select name="visibility" class="form-input">
+                        <option value="public" {% if post.visibility == 'public' %}selected{% endif %}>Public</option>
+                        <option value="private" {% if post.visibility == 'private' %}selected{% endif %}>Private</option>
+                        <option value="followers_only" {% if post.visibility == 'followers_only' %}selected{% endif %}>Followers Only</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Content with django-tinymce -->
+            <div class="form-group">
+                <label class="form-label" required>Content</label>
+                {{ form.media }}
+                {{ form.content }}
+            </div>
+            
+            <!-- Buttons -->
+            <div class="flex flex-wrap gap-3 mt-6">
+                <button type="submit" name="action" value="save_and_publish" class="btn btn-green">
+                    <i class="fas fa-rocket mr-2"></i>Save
+                </button>
+                {% comment %} <a href="{% url 'list' %}" class="btn btn-gray"> cancel </a> {% endcomment %}
+                <button type="submit" name="action" value="cancel" class="btn btn-blue">
+                    <i class="fas fa-cancel mr-2"></i>Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Wait for DOM to load before accessing TinyMCE
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('postForm');
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Check if TinyMCE is loaded
+            if (typeof tinymce !== 'undefined') {
+                const editor = tinymce.get('id_content');
+                if (editor) {
+                    const content = editor.getContent();
+                    if (content.trim() === '') {
+                        e.preventDefault();
+                        alert('Content is required. Please write your post content.');
+                        editor.focus();
+                        return false;
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+
+{% endblock body %}
