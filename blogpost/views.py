@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Category, Tags
 from .forms import PostForm
 from django.contrib import messages
@@ -10,7 +10,7 @@ def home(request):
     return render(request, 'home.html', context)
 
 @login_required
-def create_post(request):
+def post_create(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -38,3 +38,7 @@ def create_post(request):
             'edit_mode': False,
         }
         return render(request, 'create_post.html', context)
+
+def post_view(request, slug):
+    context={'post': get_object_or_404(Post, slug=slug)}
+    return render(request, 'view_post.html', context)

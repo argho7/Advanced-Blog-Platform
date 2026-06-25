@@ -81,10 +81,10 @@
                     {{ post.created_at }}
                 </p>
 
-                <!-- Content Preview -->
+                {% comment %} <!-- Content Preview -->
                 <p class="text-gray-600 mb-4 line-clamp-3">
-                    {{ post.content|striptags|truncatewords:30 }}
-                </p>
+                    {{ post.content|striptags|escape }}
+                </p> {% endcomment %}
                 
                 <!-- Tags -->
                 {% if post.tags.all %}
@@ -99,7 +99,7 @@
                 
                 <!-- Read More -->
                 <div class="flex justify-end">
-                    <a href="" class="text-blue-600 hover:text-blue-700 font-semibold text-sm">
+                    <a href="{% url 'post_view' slug=post.slug %}" class="text-blue-600 hover:text-blue-700 font-semibold text-sm">
                         Read More <i class="fas fa-arrow-right ml-1"></i>
                     </a>
                 </div>
