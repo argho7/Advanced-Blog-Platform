@@ -51,6 +51,7 @@
         {% for post in posts %}
         <div class="post-card bg-white rounded-xl overflow-hidden shadow-lg">
             <!-- Thumbnail -->
+            <a href="{% url 'post_view' slug=post.slug %}">
             {% if post.thumbnail %}
             <div class="h-48 overflow-hidden">
                 <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}" class="w-full h-full object-cover">
@@ -60,6 +61,7 @@
                 <i class="fas fa-image text-gray-400 text-5xl"></i>
             </div>
             {% endif %}
+        </a>
             
             <div class="p-6">
                 <!-- Author -->
@@ -71,7 +73,7 @@
                 
                 <!-- Title -->
                 <h2 class="text-xl font-bold mb-2 line-clamp-2">
-                    <a href="" class="hover:text-blue-600 transition">
+                    <a href="{% url 'post_view' slug=post.slug %}" class="hover:text-blue-600 transition">
                         {{ post.title }}
                     </a>
                 </h2>
