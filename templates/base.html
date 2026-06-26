@@ -43,15 +43,97 @@
                 </div>
                 
                 <!-- Search Bar -->
-                <div class="flex-1 max-w-xl mx-8">
-                    <form method="GET" action="" class="relative">
-                        <input type="text" name="q" placeholder="Search posts..." 
-                               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <button type="submit" class="absolute right-3 top-2 text-gray-400">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
+<div class="flex-1 max-w-xl mx-8">
+    <form method="GET" action="{% url 'search' %}" class="relative">
+        <div class="flex items-center bg-white border rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
+            <!-- Search Icon -->
+            <div class="pl-3 text-gray-400">
+                <i class="fas fa-search"></i>
+            </div>
+            
+            <!-- Search Input -->
+            <input type="text" 
+                   name="q" 
+                   id="searchInput" 
+                   placeholder="Search by title, author, category..." 
+                   value="{{ request.GET.q|default:'' }}"
+                   class="w-full px-3 py-2 border-0 focus:outline-none focus:ring-0">
+            
+            <!-- Clear Button (shows when text exists) -->
+            <button type="button" 
+                    id="clearSearch" 
+                    class="text-gray-400 hover:text-gray-600 px-2 hidden">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            
+            <!-- Divider -->
+            <div class="h-8 w-px bg-gray-300"></div>
+            
+            <!-- Search Type Dropdown -->
+            <div class="relative">
+                <select name="type" 
+                        id="searchType" 
+                        class="appearance-none bg-transparent text-sm text-gray-700 pl-3 pr-8 py-2 focus:outline-none cursor-pointer hover:bg-gray-50 rounded-r-lg">
+                    <option value="all" {% if request.GET.type == 'all' or not request.GET.type %}selected{% endif %}>All Fields</option>
+                    <option value="title" {% if request.GET.type == 'title' %}selected{% endif %}>Title</option>
+                    <option value="content" {% if request.GET.type == 'content' %}selected{% endif %}>Content</option>
+                    <option value="author" {% if request.GET.type == 'author' %}selected{% endif %}>Author</option>
+                    <option value="category" {% if request.GET.type == 'category' %}selected{% endif %}>Category</option>
+                    <option value="tag" {% if request.GET.type == 'tag' %}selected{% endif %}>Tags</option>
+                </select>
+                <div class="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500">
+                    <i class="fas fa-chevron-down text-xs"></i>
                 </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearSearch');
+    const searchType = document.getElementById('searchType');
+    
+    // Show/hide clear button
+    if (searchInput) {
+        // Initial state
+        if (searchInput.value.length > 0) {
+            clearBtn.classList.remove('hidden');
+        }
+        
+        // Toggle on input
+        searchInput.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+        });
+    }
+    
+    // Clear search
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            this.classList.add('hidden');
+            searchInput.focus();
+            // Optionally submit the form to clear results
+            // this.closest('form').submit();
+        });
+    }
+    
+    // Auto-submit on dropdown change
+    if (searchType) {
+        searchType.addEventListener('change', function() {
+            const form = this.closest('form');
+            if (form) {
+                form.submit();
+            }
+        });
+    }
+});
+</script>
                 
                 <!-- Navigation Links -->
                 <div class="flex items-center space-x-6">

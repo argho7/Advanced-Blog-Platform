@@ -3,6 +3,7 @@ from .models import Post, Category, Tags
 from .forms import PostForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 # Create your views here.
 def home(request):
@@ -42,3 +43,34 @@ def post_create(request):
 def post_view(request, slug):
     context={'post': get_object_or_404(Post, slug=slug)}
     return render(request, 'view_post.html', context)
+
+def search(request):
+    query = request.GET.get('q', '')
+    type = request.GET.get('type', 'all')
+    posts = []
+    
+    if query:
+        if type == 'all':
+            posts = Post.objects.filter(Q(title__icontains=query) |
+                                        Q(content__icontains=query) |
+                                        Q(author__username__icontains=query) |
+                                        Q(category__name__icontains=query) |
+                                        Q(tags__name__icontains=query)).distinct()
+        elif type == 'title':
+            posts = Post.objects.filter(Q(title__icontains=query))
+        elif type == 'content':
+            posts = Post.objects.filter(Q(content__icontains=query))
+        elif type == 'author':
+            posts = Post.objects.filter(Q(author__username__icontains=query))
+        elif type == 'category':
+            posts = Post.objects.filter(Q(category__name__icontains=query))
+        elif type == 'tag':
+            posts = Post.objects.filter(Q(tags__name__icontains=query))
+        
+        if request.user.is_superuser:
+            posts=posts.order_by('-created_at')
+        else:
+            posts=posts.filter(status='published', visibility='public').order_by('-created_at')
+
+    context={'posts':posts, 'query': query}
+    return render(request, 'search.html', context)
