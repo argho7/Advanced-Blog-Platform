@@ -75,6 +75,7 @@ def search(request):
     context={'posts':posts, 'query': query}
     return render(request, 'search.html', context)
 
+@login_required
 def post_edit(request, slug):
     post_data = get_object_or_404(Post, slug = slug)
     if request.method == 'POST':
