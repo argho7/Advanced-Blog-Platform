@@ -185,9 +185,9 @@
                 <!-- Edit/Delete Buttons (for author) -->
                 {% if user == post.author %}
                 <div class="flex gap-2">
-                    {% comment %} <a href="{% url 'edit' post.id %}" class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm"> {% endcomment %}
+                    <a href="{% url 'post_edit' slug=post.slug %}" class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm">
                         <i class="fas fa-edit mr-1"></i>Edit
-                    {% comment %} </a> {% endcomment %}
+                    </a>
                     {% comment %} <a href="{% url 'delete' post.id %}" class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm"> {% endcomment %}
                         <i class="fas fa-trash mr-1"></i>Delete
                     {% comment %} </a> {% endcomment %}
