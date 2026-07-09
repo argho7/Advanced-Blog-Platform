@@ -102,4 +102,5 @@ def verify_email(request):
 
 def user_logout(request):
     logout(request)
+    messages.success(request, 'User successfully logged out!')
     return redirect('home')
