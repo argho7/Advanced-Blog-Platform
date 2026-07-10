@@ -104,6 +104,11 @@ def search(request):
 @login_required
 def post_edit(request, slug):
     post_data = get_object_or_404(Post, slug = slug)
+
+    if post_data.author != request.user:
+        messages.error(request, "Invalid action!")
+        return redirect('home')
+
     form = PostForm(request.POST or None, request.FILES or None, instance = post_data)
     
     if request.method == 'POST' and form.is_valid():
