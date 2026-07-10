@@ -75,28 +75,49 @@ def search(request):
     context={'posts':posts, 'query': query}
     return render(request, 'search.html', context)
 
+# @login_required
+# def post_edit(request, slug):
+#     post_data = get_object_or_404(Post, slug = slug)
+#     if request.method == 'POST':
+#         form = PostForm(request.POST, instance = post_data)
+#         thumbnail = request.FILES.get('thumbnail')
+#         rm_thumbnail = request.POST.get('remove_thumbnail')
+#         if form.is_valid():
+#                 if rm_thumbnail:
+#                     post_data.thumbnail.delete()
+#                 if thumbnail:
+#                     post_data.thumbnail = thumbnail
+#                 form.save()
+#                 messages.success(request, 'Post edited successfully!')
+#                 return redirect('post_view', slug)
+#     else:
+#         form = PostForm(instance = post_data)
+#         context = {
+#             'post' : post_data,
+#             'form': form,
+#             'categories': Category.objects.all(),
+#             'tags': Tags.objects.all(),
+#             'edit_mode': True,
+#         }
+#     return render(request, 'create_edit_post.html', context)
+
 @login_required
 def post_edit(request, slug):
     post_data = get_object_or_404(Post, slug = slug)
-    if request.method == 'POST':
-        form = PostForm(request.POST, instance = post_data)
-        thumbnail = request.FILES.get('thumbnail')
-        rm_thumbnail = request.POST.get('remove_thumbnail')
-        if form.is_valid():
-                if rm_thumbnail:
-                    post_data.thumbnail.delete()
-                if thumbnail:
-                    post_data.thumbnail = thumbnail
-                form.save()
-                messages.success(request, 'Post edited successfully!')
-                return redirect('post_view', slug)
+    form = PostForm(request.POST or None, request.FILES or None, instance = post_data)
+    
+    if request.method == 'POST' and form.is_valid():
+        if request.POST.get("remove_thumbnail") and post_data.thumbnail:
+            post_data.thumbnail.delete(save=False)
+            form.instance.thumbnail = None
+        form.save()
+        return redirect('post_view', slug)
+
     else:
-        form = PostForm(instance = post_data)
-        context = {
-            'post' : post_data,
-            'form': form,
-            'categories': Category.objects.all(),
-            'tags': Tags.objects.all(),
-            'edit_mode': True,
-        }
-    return render(request, 'create_edit_post.html', context)
+        return render(request, 'create_edit_post.html', {
+                'post' : post_data,
+                'form': form,
+                'categories': Category.objects.all(),
+                'tags': Tags.objects.all(),
+                'edit_mode': True,
+            })
