@@ -38,7 +38,7 @@ def post_create(request):
             'tags': Tags.objects.all(),
             'edit_mode': False,
         }
-        return render(request, 'create_post.html', context)
+        return render(request, 'create_edit_post.html', context)
 
 def post_view(request, slug):
     context={'post': get_object_or_404(Post, slug=slug)}
