@@ -14,7 +14,7 @@ from pathlib import Path
 from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -82,15 +82,10 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT', default=5432, cast=int)
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -136,6 +131,7 @@ MEDIA_ROOT= BASE_DIR / 'media/'
 #Cutom user model
 AUTH_USER_MODEL = 'user_auth.Custom_User'
 
+
 # Email configuration
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
@@ -145,36 +141,6 @@ EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
-# TinyMCE Configuration
-TINYMCE_DEFAULT_CONFIG = {
-    'height': 500,
-    'width': '100%',
-    'menubar': 'file edit view insert format tools table help',
-    'plugins': '''
-        advlist autolink lists link image charmap print preview anchor
-        searchreplace visualblocks code fullscreen
-        insertdatetime media table paste code help wordcount
-        ''',
-    'toolbar': '''
-        undo redo | bold italic underline strikethrough | 
-        forecolor backcolor | alignleft aligncenter alignright | 
-        bullist numlist | link image media | 
-        code fullscreen preview | help
-        ''',
-    'toolbar_mode': 'sliding',
-    'contextmenu': 'link image table',
-    # 'images_upload_handler': 'handle_image_upload',  # Custom handler
-    'images_upload_url': '/upload/image/',  
-    'images_upload_credentials': True, 
-    'images_reuse_filename': False,
-    'images_upload_base_path': '/media/blog/post/images/',
-    'automatic_uploads': True,
-    'file_picker_types': 'image',
-    'relative_urls': False,
-    'remove_script_host': False,
-    'convert_urls': True,
-    'browser_spellcheck': True,
-    'paste_data_images': True,
-    'autoresize_bottom_margin': 50,
-    'autoresize_on_init': True,
-}
+
+# TEXT EDITOR / TinyMCE Configuration
+from .text_editor import  *
